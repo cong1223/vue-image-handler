@@ -1,11 +1,12 @@
 {
   "name": "vue-image-handler",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name vue-image-handler --dest lib packages/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -38,5 +39,16 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "description": "## Project setup ``` yarn install ```",
+  "main": "babel.config.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "keywords": [
+    "图片裁剪", "图片去底色", "vue图片处理"
+  ],
+  "author": "小聪忙",
+  "license": "ISC"
 }

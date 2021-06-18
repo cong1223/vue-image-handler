@@ -1,33 +1,33 @@
 <template>
   <div class="container">
-      <div
-        class="crop-wrapper mr16 fl"
-        :style="{ width: canvasWidth, height: canvasHeight }"
-      >
-        <ImageCropper
-          ref="cropper"
-          :img="option.img"
-          :outputSize="option.size"
-          :outputType="option.outputType"
-          auto-crop
-          :canMove="option.canMove"
-          mode="contain"
-          :autoCropWidth="canvasWidth"
-          :autoCropHeight="canvasHeight"
-          @realTime="realTime"
-        />
-      </div>
-      <canvas id="target_canvas" style="display: none"></canvas>
-      <div
-        class="recover_img_cover fl"
-        :style="{ width: canvasWidth, height: canvasHeight }"
-      >
-        <div
-          id="recover_img"
-          :style="{ backgroundImage: `url('${recoverImgUrl}')` }"
-        ></div>
-      </div>
+    <div
+      class="crop-wrapper mr16 fl"
+      :style="{ width: canvasWidth, height: canvasHeight }"
+    >
+      <ImageCropper
+        ref="cropper"
+        :img="originalImgData"
+        :outputSize="option.size"
+        :outputType="option.outputType"
+        auto-crop
+        :canMove="option.canMove"
+        mode="contain"
+        :autoCropWidth="canvasWidth"
+        :autoCropHeight="canvasHeight"
+        @realTime="realTime"
+      />
     </div>
+    <canvas id="target_canvas" style="display: none"></canvas>
+    <div
+      class="recover_img_cover fl"
+      :style="{ width: canvasWidth, height: canvasHeight }"
+    >
+      <div
+        id="recover_img"
+        :style="{ backgroundImage: `url('${recoverImgUrl}')` }"
+      ></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -56,29 +56,33 @@ export default {
       default: 20,
     },
     wipeColor: String,
+    option: {
+      type: Object,
+      default() {
+        return {
+          size: 1,
+          full: false,
+          outputType: 'png',
+          canMove: true,
+          fixedBox: false,
+          original: false,
+          canMoveBox: true,
+          autoCrop: true,
+          // 只有自动截图开启 宽度高度才生效
+          autoCropWidth: 160,
+          autoCropHeight: 150,
+          centerBox: false,
+          high: true,
+          max: 99999,
+        };
+      },
+    },
   },
   data() {
     return {
       model: false,
       modelSrc: '',
       crap: false,
-      option: {
-        img: '',
-        size: 1,
-        full: false,
-        outputType: 'png',
-        canMove: true,
-        fixedBox: false,
-        original: false,
-        canMoveBox: true,
-        autoCrop: true,
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 160,
-        autoCropHeight: 150,
-        centerBox: false,
-        high: true,
-        max: 99999,
-      },
       img: null,
       canvasInfo: {
         width: 380,
@@ -106,6 +110,7 @@ export default {
       },
       clickColorInfo: {},
       recoverImgUrl: '',
+      originalImgData: null,
     };
   },
   computed: {},
@@ -134,6 +139,12 @@ export default {
         this.clickColorInfo = this.COLORS[colorFieldName];
       }
       this.transparentModeCanvas();
+    },
+    canvasWidth() {
+      this.initCanvasInfo();
+    },
+    canvasHeight() {
+      this.initCanvasInfo();
     }
   },
   created() {
@@ -145,24 +156,32 @@ export default {
     this.initCanvasInfo();
   },
   methods: {
-    // changeWipeColor(e) {
-    //   if (!e) {
-    //     this.recoverCanvas();
-    //     return;
-    //   } else {
-    //     const colorFieldName = e === 'white' ? 'WHITE' : 'BLACK';
-    //     this.resultImgDataArr = [];
-    //     this.clickColorInfo = this.COLORS[colorFieldName];
-    //   }
-    //   this.transparentModeCanvas();
-    // },
+    download() {
+      this.$refs.cropper.getCropBlob(data => {
+        if (window.navigator.msSaveBlob) {
+          var blobObject = new Blob([data]);
+          window.navigator.msSaveBlob(blobObject, 'demo.png');
+        } else {
+          this.$nextTick(() => {
+            const a = document.createElement('a');
+            a.setAttribute('download', 'demo.png');
+            a.setAttribute('href', window.URL.createObjectURL(data));
+            a.click();
+          });
+        }
+      });
+    },
+    rotate() {
+      this.$refs.cropper.rotateLeft();
+    },
+    refresh() {
+      this.$refs.cropper.refresh();
+    },
     handleSkip(callback) {
       callback(this.imgFile);
     },
     init() {
-      this.option.img = this.imgFile;
-      // this.wipeColor = '';
-      // this.colorDiff = 20;
+      this.originalImgData = this.imgFile;
       this.clickColorInfo = {};
       this.resultImgDataArr = [];
       this.$nextTick(() => {
@@ -181,20 +200,15 @@ export default {
       );
       this.setCanvasImgToDownloadLink();
     },
-    // handleChangeColorDiff() {
-    //     if (this.wipeColor) {
-    //         this.resultImgDataArr = [];
-    //         this.transparentModeCanvas();
-    //     }
-    // },
     handleCrop() {
       this.$refs.cropper.getCropBlob(data => {
         this.setImgIntoCanvas(data);
       });
     },
-    handleClose() {
-      this.$emit('update:visible', false);
-      this.option.img = '';
+    // clear
+    handleClear() {
+      this.originalImgData = null;
+      this.$refs.cropper.clearCrop();
     },
     // 实时预览函数
     realTime() {

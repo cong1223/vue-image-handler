@@ -10,13 +10,18 @@
     />
     <VueImageHandler
       ref="vueImageHandler"
-      canvas-width="380px"
-      canvas-height="252px"
+      :canvas-width="width"
+      :canvas-height="height"
       :img-file="imgFile"
       :wipe-color="wipeColor"
       :color-diff="colorDiff"
     />
     <div class="tools">
+      <label for="colorDiff" style="margin-right: 8px">长: </label>
+      <input id="colorDiff" type="number" value="380" style="margin-right: 16px" @input="changeCanvasWidth" />
+      <label for="colorDiff" style="margin-right: 8px">宽: </label>
+      <input id="colorDiff" type="number" value="252" style="margin-right: 16px" @input="changeCanvasHeight" />
+      <br/>
       <vRadio
         id="myradio1"
         name="myradio"
@@ -46,8 +51,10 @@
         原图
       </vRadio>
       <label for="colorDiff" style="margin-right: 8px">容差值: </label>
-      <input id="colorDiff" type="number" value="20" @input="changeColorDiff" />
-      <button @click="getUrl" style="margin-left: 16px">控制台打印出处理后的图片</button>
+      <input id="colorDiff" type="number" value="20" style="margin-right: 16px" @input="changeColorDiff" />
+      <button @click="handleRotate" style="margin-right: 16px">旋转90°</button>
+      <button @click="getUrl" style="margin-right: 16px">控制台打印出处理后的图片</button>
+      <button @click="download">下载图片</button>
     </div>
   </div>
 </template>
@@ -62,12 +69,22 @@ export default {
   },
   data() {
     return {
-      imgFile: '',
+      imgFile: 'https://cdn.jsdelivr.net/gh/cong1223/cloudimg@master/img/20210613092202.png',
       wipeColor: '',
-      colorDiff: 20
+      colorDiff: 20,
+      width: '380px',
+      height: '252px'
     };
   },
   methods: {
+    changeCanvasWidth(e) {
+      this.width = e.target.value + 'px';
+      this.$refs.vueImageHandler.refresh();
+    },
+    changeCanvasHeight(e) {
+      this.height = e.target.value + 'px';
+      this.$refs.vueImageHandler.refresh();
+    },
     changeWipeColor(e) {
       this.wipeColor = e;
     },
@@ -77,6 +94,9 @@ export default {
     pickImage() {
       this.$refs.filElem.dispatchEvent(new MouseEvent('click'));
     },
+    handleRotate() {
+      this.$refs.vueImageHandler.rotate();
+    },
     getFile() {
       const inputFile = this.$refs.filElem.files[0];
       if (inputFile) {
@@ -85,14 +105,19 @@ export default {
         if (isGT5M) {
           alert('对不起您上传的文件大于5M, 请重新选择图片');
         }
-        let reader = new FileReader();
-        reader.readAsDataURL(inputFile);
-        reader.onload = e => {
-          this.imgFile = e.target.result;
-        };
+        this.imgFile = inputFile;
+        this.$refs.filElem.value = ''
+        // let reader = new FileReader();
+        // reader.readAsDataURL(inputFile);
+        // reader.onload = e => {
+        //   this.imgFile = e.target.result;
+        // };
       } else {
         return;
       }
+    },
+    download() {
+      this.$refs.vueImageHandler.download();
     },
     getUrl() {
       this.$refs.vueImageHandler.getImageUrl(url => {
@@ -105,7 +130,10 @@ export default {
 
 <style scoped lang="css">
 .tools {
-  display: flex;
   margin-top: 16px;
+}
+.tools > * {
+  display: inline-block;
+  margin-bottom: 16px;
 }
 </style>

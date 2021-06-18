@@ -115,6 +115,7 @@
 
 <script>
 import exifmin from "./exif-js-min";
+import { file2DataURI, blobToDataURI } from "./utils";
 export default {
   name: 'ImageCropper',
   data: function() {
@@ -522,6 +523,7 @@ export default {
     },
     // checkout img
     checkedImg() {
+      console.log('文件类型', this.img instanceof File);
       if (this.img === null || this.img === '') {
         this.imgs = ''
         this.clearCrop()
@@ -532,6 +534,16 @@ export default {
       this.rotate = 0;
       this.clearCrop();
       let img = new Image();
+      if (this.img instanceof File) { // File类型
+        file2DataURI(this.img, (dataUrl) => {
+          img.src = dataUrl;
+        });
+      }
+      if (this.img instanceof Blob) { // blob类型
+        blobToDataURI(this.img, (dataUrl) => {
+          img.src = dataUrl;
+        });
+      }
       img.onload = () => {
         if (this.img === "") {
           this.$emit("imgLoad", "error");
@@ -563,7 +575,7 @@ export default {
         this.$emit("img-load", "error");
       };
       // 判断如果不是base64图片 再添加crossOrigin属性，否则会导致iOS低版本(10.2)无法显示图片
-      if (this.img.substr(0, 4) !== "data") {
+      if (typeof this.img === 'string' && this.img.substr(0, 4) !== "data") {
         img.crossOrigin = "";
       }
       if (this.isIE) {
@@ -1456,7 +1468,7 @@ export default {
         cb(canvas);
       };
       // 判断图片是否是base64
-      var s = this.img.substr(0, 4);
+      var s = typeof this.img === 'string' && this.img.substr(0, 4);
       if (s !== "data") {
         img.crossOrigin = "Anonymous";
       }

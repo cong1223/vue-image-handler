@@ -119,6 +119,9 @@ export default {
       handler() {
         if (this.imgFile) {
           this.init();
+        } else {
+          this.originalImgData = '';
+          this.$refs.cropper.clearCrop();
         }
       },
       immediate: true,
@@ -341,9 +344,12 @@ export default {
     },
     /**
      * 确认返回最终处理完的图片
+     * type: dataUrl ===> 返回base64; blob ===> 返回Blob对象
      */
     getImageUrl(callback) {
-      callback(this.recoverImgUrl);
+      this.$refs.cropper.getCropData(data => {
+        callback(data);
+      })
       // this.$emit('getImageUrl', this.recoverImgUrl);
     },
   },

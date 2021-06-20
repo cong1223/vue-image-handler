@@ -17,10 +17,10 @@
       :color-diff="colorDiff"
     />
     <div class="tools">
-      <label for="colorDiff" style="margin-right: 8px">长: </label>
-      <input id="colorDiff" type="number" value="380" style="margin-right: 16px" @input="changeCanvasWidth" />
-      <label for="colorDiff" style="margin-right: 8px">宽: </label>
-      <input id="colorDiff" type="number" value="252" style="margin-right: 16px" @input="changeCanvasHeight" />
+      <label for="colorDiffWidth" style="margin-right: 8px">长: </label>
+      <input id="colorDiffWidth" type="number" value="380" style="margin-right: 16px" @input="changeCanvasWidth" />
+      <label for="colorDiffHeight" style="margin-right: 8px">宽: </label>
+      <input id="colorDiffHeight" type="number" value="252" style="margin-right: 16px" @input="changeCanvasHeight" />
       <br/>
       <vRadio
         id="myradio1"

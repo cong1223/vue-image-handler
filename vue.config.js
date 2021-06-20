@@ -1,4 +1,5 @@
 module.exports = {
+  css: { extract: false }, // 样式强制内联,打包后不需要单独引用css
   // 修改 src 为 examples
   pages: {
     index: {

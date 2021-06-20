@@ -130,12 +130,13 @@ export default {
       }
     },
     wipeColor() {
+      this.resultImgDataArr = [];
       if (!this.wipeColor) {
+        this.clickColorInfo = {};
         this.recoverCanvas();
         return;
       } else {
         const colorFieldName = this.wipeColor === 'white' ? 'WHITE' : 'BLACK';
-        this.resultImgDataArr = [];
         this.clickColorInfo = this.COLORS[colorFieldName];
       }
       this.transparentModeCanvas();

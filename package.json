@@ -1,6 +1,6 @@
 {
   "name": "vue-image-handler",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,11 +12,19 @@
     "core-js": "^3.6.5",
     "vue": "^2.6.11"
   },
-  "description": "## Project setup ``` yarn install ```",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cong1223/vue-image-handler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cong1223/vue-image-handler/issues"
+  },
+  "homepage": "https://github.com/cong1223/vue-image-handler#readme",
+  "description": "## Project setup ``` yarn install vue-image-handler```",
   "main": "lib/vue-image-handler.umd.js",
   "style": "lib/vue-image-handler.css",
   "keywords": [
-    "图片裁剪", "图片去底色", "vue图片处理"
+    "图片裁剪", "图片去底色", "vue图片处理", "图片旋转"
   ],
   "files": [
     "dist",

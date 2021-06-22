@@ -54,7 +54,8 @@
       <input id="colorDiff" type="number" value="20" style="margin-right: 16px" @input="changeColorDiff" />
       <button @click="handleRotate" style="margin-right: 16px">旋转90°</button>
       <button @click="getUrl" style="margin-right: 16px">控制台打印出处理后的图片</button>
-      <button @click="download">下载图片</button>
+      <button @click="download" style="margin-right: 16px">下载图片</button>
+      <button @click="clear">清空画布</button>
     </div>
   </div>
 </template>
@@ -106,7 +107,7 @@ export default {
           alert('对不起您上传的文件大于5M, 请重新选择图片');
         }
         this.imgFile = inputFile;
-        this.$refs.filElem.value = ''
+        this.$refs.filElem.value = '';
         // let reader = new FileReader();
         // reader.readAsDataURL(inputFile);
         // reader.onload = e => {
@@ -123,6 +124,9 @@ export default {
       this.$refs.vueImageHandler.getImageUrl(url => {
         console.log('处理后的图片', url);
       });
+    },
+    clear() {
+      this.$refs.vueImageHandler.clear();
     }
   },
 };

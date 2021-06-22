@@ -32,6 +32,7 @@
 
 <script>
 import ImageCropper from './image-cropper.vue';
+import { dataURLtoBlob } from './utils';
 // import vRadio from './v-radio.vue';
 export default {
   name: 'VueImageHandler',
@@ -114,8 +115,7 @@ export default {
         if (this.imgFile) {
           this.init();
         } else {
-          this.originalImgData = '';
-          this.$refs.cropper.clearCrop();
+          this.clear();
         }
       },
       immediate: true,
@@ -174,7 +174,8 @@ export default {
       this.clickColorInfo = {};
       this.resultImgDataArr = [];
       this.$nextTick(() => {
-        this.$refs.cropper.reload();
+        // this.$refs.cropper.reload();
+        this.$refs.cropper.refresh();
       });
     },
     recoverCanvas() {
@@ -193,14 +194,16 @@ export default {
       });
     },
     // clear
-    handleClear() {
+    clear() {
       this.originalImgData = null;
+      this.recoverImgUrl = '';
       this.$refs.cropper.clearCrop();
     },
     // 实时预览函数
     realTime() {
-      this.$refs.cropper.getCropBlob(data => {
-        this.setImgIntoCanvas(data);
+      // 不能用getCropBlob, 否则预览图会闪烁. 原因不明
+      this.$refs.cropper.getCropData(data => {
+        this.setImgIntoCanvas(dataURLtoBlob(data));
       });
     },
     // 加载图片资源到canvas中

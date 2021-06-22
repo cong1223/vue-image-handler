@@ -523,7 +523,6 @@ export default {
     },
     // checkout img
     checkedImg() {
-      console.log('文件类型', this.img instanceof File);
       if (this.img === null || this.img === '') {
         this.imgs = ''
         this.clearCrop()

@@ -1,6 +1,6 @@
 {
   "name": "vue-image-handler",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",

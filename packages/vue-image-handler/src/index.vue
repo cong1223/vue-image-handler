@@ -84,16 +84,10 @@ export default {
       modelSrc: '',
       crap: false,
       img: null,
-      canvasInfo: {
-        width: 380,
-        height: 252,
-      },
       imgDataArr: [],
       resultImgDataArr: [],
       drawImgWidth: '',
       drawImgHeight: '',
-      drawImgDx: '',
-      drawImgDy: '',
       COLORS: {
         WHITE: {
           aValue: 255,
@@ -144,20 +138,11 @@ export default {
       }
       this.transparentModeCanvas();
     },
-    canvasWidth() {
-      this.initCanvasInfo();
-    },
-    canvasHeight() {
-      this.initCanvasInfo();
-    }
   },
   created() {
-    this.canvasInfo.width = this.canvasWidth;
-    this.canvasInfo.height = this.canvasHeight;
   },
   mounted() {
     this.img = new Image();
-    this.initCanvasInfo();
   },
   methods: {
     download() {
@@ -198,9 +183,7 @@ export default {
       }
       const ctx = document.getElementById('target_canvas').getContext('2d');
       ctx.putImageData(
-        new ImageData(this.imgDataArr, this.drawImgWidth, this.drawImgHeight),
-        this.drawImgDx,
-        this.drawImgDy
+        new ImageData(this.imgDataArr, this.drawImgWidth, this.drawImgHeight), 0, 0
       );
       this.setCanvasImgToDownloadLink();
     },
@@ -220,53 +203,21 @@ export default {
         this.setImgIntoCanvas(data);
       });
     },
-    // 初始化canvas信息
-    initCanvasInfo() {
-      const $targetCanvas = document.getElementById('target_canvas');
-      if ($targetCanvas) {
-        this.canvasInfo.width = this.canvasWidth.replace('px', '');
-        this.canvasInfo.height = this.canvasHeight.replace('px', '');
-      }
-    },
     // 加载图片资源到canvas中
     setImgIntoCanvas(imgFile) {
       const reader = new FileReader();
       reader.readAsDataURL(imgFile);
-      reader.onloadend = e => {
+      reader.onloadend = (e) => {
         const dataURL = e.target.result;
         this.img.src = dataURL;
-        this.img.onload = () => {
+        this.img.onload = (event) => {
           const ctx = document.getElementById('target_canvas').getContext('2d');
           //将canvas大小设置为和图片一样大
-          let imgRatio = this.img.width / this.img.height,
-            canvasRatio = this.canvasInfo.width / this.canvasInfo.height,
-            dw,
-            dh,
-            dx,
-            dy;
-          if (imgRatio < canvasRatio) {
-            dw = imgRatio * this.canvasInfo.height;
-            dx = (this.canvasInfo.width - dw) / 2;
-            dh = this.canvasInfo.height;
-            dy = 0;
-          } else if (imgRatio === canvasRatio) {
-            dw = this.canvasInfo.width;
-            dh = this.canvasInfo.height;
-            dx = 0;
-            dy = 0;
-          } else {
-            dw = this.canvasInfo.width;
-            dh = dw / imgRatio;
-            dx = 0;
-            dy = (this.canvasInfo.height - dh) / 2;
-          }
-          this.drawImgWidth = dw;
-          this.drawImgHeight = dh;
-          this.drawImgDx = dx;
-          this.drawImgDy = dy;
-          this.setCanvasSize(this.canvasInfo.width, this.canvasInfo.height);
-          ctx.drawImage(this.img, dx, dy, dw, dh);
-          this.imgDataArr = ctx.getImageData(dx, dy, dw, dh).data;
+          this.drawImgWidth = this.img.width;
+          this.drawImgHeight = this.img.height;
+          this.setCanvasSize(this.drawImgWidth, this.drawImgHeight);
+          ctx.drawImage(this.img, 0, 0, this.drawImgWidth, this.drawImgHeight);
+          this.imgDataArr = ctx.getImageData(0, 0, this.drawImgWidth, this.drawImgHeight).data;
           this.resultImgDataArr = this.imgDataArr.slice(0);
           this.transparentModeCanvas();
         };
@@ -282,7 +233,7 @@ export default {
       }
       const ctx = document.getElementById('target_canvas').getContext('2d');
       for (
-        let pos = this.canvasInfo.width * this.canvasInfo.height * 4 - 4;
+        let pos = this.drawImgWidth * this.drawImgHeight * 4 - 4;
         pos >= 0;
         pos = pos - 4
       ) {
@@ -302,15 +253,13 @@ export default {
           this.drawImgWidth,
           this.drawImgHeight
         ),
-        this.drawImgDx,
-        this.drawImgDy
+        0,
+        0
       );
       this.setCanvasImgToDownloadLink();
     },
     // 设置canvas宽高
     setCanvasSize(width, height) {
-      this.canvasInfo.width = width;
-      this.canvasInfo.height = height;
       const targetCanvasEl = document.getElementById('target_canvas');
       targetCanvasEl.width = width;
       targetCanvasEl.height = height;
@@ -327,7 +276,7 @@ export default {
      * 获取图像数据中指定偏移处的颜色信息
      */
     getColorInfo(imgDataArr, offsetX, offsetY) {
-      const pos = this.canvasInfo.width * 4 * offsetY + offsetX * 4;
+      const pos = this.drawImgWidth * 4 * offsetY + offsetX * 4;
       return {
         rValue: imgDataArr[pos],
         gValue: imgDataArr[pos + 1],
@@ -347,10 +296,7 @@ export default {
      * type: dataUrl ===> 返回base64; blob ===> 返回Blob对象
      */
     getImageUrl(callback) {
-      this.$refs.cropper.getCropData(data => {
-        callback(data);
-      })
-      // this.$emit('getImageUrl', this.recoverImgUrl);
+      callback(this.recoverImgUrl);
     },
   },
 };

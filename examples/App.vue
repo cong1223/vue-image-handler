@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <h1>
+      <a href="#" class="title">vue-image-handler</a>
+    </h1>
     <button type="primary" @click="pickImage">选择图片</button>
     <input
       ref="filElem"
@@ -62,11 +65,13 @@
 
 <script>
 import vRadio from './components/v-radio.vue';
+import { VueImageHandler } from '../lib/vue-image-handler.umd.js';
 
 export default {
   name: 'App',
   components: {
-    vRadio
+    vRadio,
+    VueImageHandler
   },
   data() {
     return {
@@ -139,5 +144,35 @@ export default {
 .tools > * {
   display: inline-block;
   margin-bottom: 16px;
+}
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+.title {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.5;
+  margin: 20px 0;
+  background-image: -webkit-linear-gradient(left,#3498db,#f47920 10%,#d71345 20%,#f7acbc 30%,#ffd400 40%,#3498db 50%,#f47920 60%,#d71345 70%,#f7acbc 80%,#ffd400 90%,#3498db);
+  color: transparent;
+  background-size: 200% 100%;
+  animation: slide 5s infinite linear;
+  font-size: 40px;
+  -webkit-background-clip: text;
+}
+@keyframes slide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 </style>

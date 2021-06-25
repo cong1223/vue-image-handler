@@ -7,13 +7,12 @@
       <ImageCropper
         ref="cropper"
         :img="originalImgData"
-        :outputSize="option.size"
+        :outputSize="option.outputQuality"
         :outputType="option.outputType"
         auto-crop
         :canMove="option.canMove"
-        mode="contain"
-        :autoCropWidth="canvasWidth"
-        :autoCropHeight="canvasHeight"
+        :autoCropWidth="option.cropWidth"
+        :autoCropHeight="option.cropHeight"
         @realTime="realTime"
       />
     </div>
@@ -61,17 +60,14 @@ export default {
       type: Object,
       default() {
         return {
-          size: 1,
+          outputQuality: 1,
           full: false,
           outputType: 'png',
           canMove: true,
           fixedBox: false,
-          original: false,
           canMoveBox: true,
-          autoCrop: true,
-          // 只有自动截图开启 宽度高度才生效
-          autoCropWidth: 160,
-          autoCropHeight: 150,
+          cropWidth: 380,
+          cropHeight: 252,
           centerBox: false,
           high: true,
           max: 99999,

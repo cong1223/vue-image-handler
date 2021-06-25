@@ -1,12 +1,12 @@
 {
   "name": "vue-image-handler",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name vue-image-handler --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name vue-image-handler --dest lib package/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -25,11 +25,6 @@
   "style": "lib/vue-image-handler.css",
   "keywords": [
     "图片裁剪", "图片去底色", "vue图片处理", "图片旋转"
-  ],
-  "files": [
-    "dist",
-    "lib",
-    "package"
   ],
   "author": "小聪忙",
   "license": "ISC"

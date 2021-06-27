@@ -4,8 +4,7 @@
 ### 一个支持图片自定义裁剪和去底色的插件
 
 [github地址（感谢star）](https://github.com/cong1223/vue-image-handler.git)
-### 预览效果
-![](https://cdn.jsdelivr.net/gh/cong1223/cloudimg@master/img/20210625092422.gif)
+### [在线预览](https://practical-boyd-7f917a.netlify.app/)
 ### 安装
 ```cmd
 npm install vue-image-handler
